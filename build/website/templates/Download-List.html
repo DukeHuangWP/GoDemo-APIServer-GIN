@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>{{.HTMLValue_Title}}</title>
+	<style>
+		#iframeLeft {
+			width: 20%;
+		}
+
+		#divRight {
+			width: 79%;
+			float: right;
+		}
+	</style>
+</head>
+
+<body>
+	<div>
+
+		<iframe id="iframeLeft" name="iframeLeft" src="{{.HTMLPage_Menu}}" allowTransparency="true" width="100%"
+			marginwidth="0" marginheight="0" scrolling="No" frameborder="0"
+			onload="Javascript:JSF_SetCWinHeight()"></iframe>
+		<div id="divRight" onload="Javascript:JSF_SetCWinHeight()">
+			<div> -- 最後維護: {{.HTMLValue_LastUpdate}}</div>
+			<br>
+			<div>
+				<div id="downloadlinks"></div>
+				<br>
+				{{.HTMLValue_OutputReturn}}
+			</div>
+
+
+		</div>
+
+</body>
+<script language="javascript">
+	function JSF_SetCWinHeight() {
+		document.getElementById("iframeLeft").height = window.innerHeight - 10;
+		document.getElementById("divRight").height = window.innerHeight - 10;
+
+		document.getElementById('downloadlinks').insertAdjacentHTML('beforeend', '{{.HTMLValue_OutputDownloadLinks}}');
+	}
+</script>
+
+</html>

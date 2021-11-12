@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>{{.HTMLValue_Title}}</title>
+	<style>
+		#iframeLeft {
+			width: 20%;
+		}
+
+		#divRight {
+			width: 79%;
+			float: right;
+		}
+	</style>
+</head>
+
+<body>
+	<div>
+		<div id="divRight" onload="Javascript:JSF_SetCWinHeight()">
+			<div> -- 最後維護: {{.HTMLValue_LastUpdate}}</div>
+			<br>
+			<form method="POST" action="" onsubmit="">
+
+				<textarea style="width: 40%; " rows="10" id="Test1" name="Test1">
+				{
+					"Account":"166632073",
+					"AmountMin":10,
+					"AmountMax":100,
+					"Attach": "",
+					"RemitterAccountName": "",
+					"CollBankCardGroupId": "",
+					"TranBankCardGroupId": "",
+					"IdleSec": 10
+				}
+				</textarea><textarea style="width: 20%; " rows="10" readonly="readonly">
+				{
+					"Account":"166632073",
+					"AmountMin":10,
+					"AmountMax":100,
+					"Attach": "",
+					"RemitterAccountName": "",
+					"CollBankCardGroupId": "",
+					"TranBankCardGroupId": "",
+					"IdleSec": 10
+				}
+				</textarea>
+				<textarea style="width: 20%; " rows="10" readonly="readonly">
+				{
+					"Account":"166632073",
+					"AmountMin":10,
+					"AmountMax":100,
+					"Attach": "",
+					"RemitterAccountName": "",
+					"CollBankCardGroupId": "",
+					"TranBankCardGroupId": "",
+					"IdleSec": 10
+				}
+				</textarea>
+				<div></div>
+				<input style="width: 80%; " type="submit" formaction="https://api.ift-system.com/" value="發送POST" />
+				<br>
+
+
+
+			</form>
+
+		</div>
+	</div>
+
+</body>
+<script language="javascript">
+	function JSF_SetCWinHeight() {
+		document.getElementById("iframeLeft").height = window.innerHeight - 10;
+		document.getElementById("divRight").height = window.innerHeight - 10;
+
+		document.getElementById('downloadlinks').insertAdjacentHTML('beforeend', '{{.HTMLValue_OutputDownloadLinks}}');
+	}
+</script>
+
+</html>

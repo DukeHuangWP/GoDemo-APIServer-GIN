@@ -1,0 +1,68 @@
+version: '3.8'
+services:
+  IntergTest:
+    container_name: go_IntergTest
+    restart: always
+    privileged: true
+    image: golang:1.16.6-stretch
+    volumes: #HOST:CONTAINER:ro
+      - ./:/root/
+    working_dir: #預設工作目錄
+      /root/
+    entrypoint: ./IntergTest
+    stop_grace_period: 30s
+    ports: #對外Port:容器內Port
+      - "8081:8081"
+    networks:
+      - default
+      - outside
+    ulimits:
+      nproc: 65535
+      nofile:
+        soft: 20000
+        hard: 40000
+    environment:
+      - TZ=Asia/Taipei
+
+networks:
+  outside:
+    external: true
+
+  # db:
+  #   image: mariadb
+  #   working_dir: #預設工作目錄
+  #     /root/
+  #   environment:
+  #     MYSQL_ROOT_PASSWORD: example
+
+  # Redis-Server:
+  #   restart: always
+  #   container_name: redis
+  #   image: redis:6.2.4-alpine
+  #   ports:
+  #     - 16379:6379
+  #   volumes:
+  #     - ./Redis/data:/data
+
+# version: "3.5": 選定 docker-compose 的版本，每個版本提供的 API 方法有所差異。
+# services: 此欄位底下會有所有的容器，以下分別有server與db兩個 容器。
+# build: 說明此容器要使用特定 Dockerfile 來 build，context為檔案目錄，dockerfile為 Dockerfile 的名字。
+# working_dir: 指定 docker 啟動時所在的目錄，如果目錄不存在會自動創建一個。
+# volumes: 將本機檔案掛載至 docker 內部，本機檔案更新時 docker 內部的掛載檔案也會更新。
+# ports: 將本機的 port 做 mapping 與 docker 內部的 poart。
+# depends_on: 說明 a 容器與 b 容器有相關，會等到 b 容器啟動完畢後，再啟動 a 容器。
+# entrypoint: 指定 docker 啟動時的預設指令。
+# restart: 當容器不正常關閉時，會重新啟動容器。
+# image: 如果不使用 Dockerfile 來建立容器，你可以直接使用 docker image 來啟動容器。
+# environment: 指定容器內的環境變數。
+# command: #容器內服務啟動指令
+# >
+# sh -c "
+# echo 目錄/dev/shm/:&&
+# ls -la /dev/shm/ &&
+# echo 目錄./:&&
+# ls -la ./ &&
+# (./BFSystem-API &) &&
+# (./api_dlv.sh &) &&
+# tail -f /dev/null
+# "

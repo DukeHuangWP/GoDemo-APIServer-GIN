@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>{{.HTMLValue_Title}}</title>
+	<style>
+		#iframeLeft {
+			width: 15%;
+		}
+
+		#divRight {
+			width: 84%;
+			float: right;
+		}
+
+		body {
+			font-family: Microsoft JhengHei;
+		}
+
+		/* Style the tab */
+		.tab {
+			width: 100%;
+			overflow: hidden;
+			border: 1px solid #ccc;
+			background-color: #f1f1f1;
+		}
+
+		/* Style the buttons inside the tab */
+		.tab button {
+			background-color: inherit;
+			float: left;
+			border: none;
+			outline: none;
+			cursor: pointer;
+			padding: 14px 16px;
+			transition: 0.3s;
+			font-size: 17px;
+		}
+
+		/* Change background color of buttons on hover */
+		.tab button:hover {
+			background-color: #ddd;
+		}
+
+		/* Create an active/current tablink class */
+		.tab button.active {
+			background-color: #ccc;
+		}
+
+		/* Style the tab content */
+		.tabcontent {
+			width: 100%;
+			display: none;
+			/* padding: 6px 12px;*/
+			/*border: 1px solid #ccc;*/
+			border-top: none;
+			box-sizing: border-box;
+		}
+	</style>
+</head>
+
+<body>
+
+	<div>
+		<iframe id="iframeLeft" name="iframeLeft" src="{{.HTMLPage_Menu}}" allowTransparency="true" width="100%"
+			marginwidth="0" marginheight="0" scrolling="No" frameborder="0"
+			onload="Javascript:JSF_SetCWinHeight()"></iframe>
+		<div id="divRight" onload="Javascript:JSF_SetCWinHeight()">
+
+			<table>
+				<div style="width: 90%;">
+					<div>BFSystem : APITest 接口測試 -- 最後維護: {{.HTMLValue_LastUpdate}}</div>
+					<br>
+					<div>
+						<form method="POST" action="" onsubmit="JSF_BeforeSendCheck()">
+							<label>所需參數: login_account </label><input style="width: 100%;" id="HTMLInput_LoginAccount"
+								name="HTMLInput_LoginAccount" type="text" value={{.HTMLInput_LoginAccount}}>
+							<div></div>
+							<label>所需參數: account.sign_key (商戶專用) </label><input style="width: 100%;" id="HTMLInput_SignKey"
+								name="HTMLInput_SignKey" type="text" value={{.HTMLInput_SignKey}}>
+							<div></div>
+							<label>所需參數: account.des_key 或內部API使用之3DESKey </label><input style="width: 100%;" id="HTMLInput_DesKey"
+								name="HTMLInput_DesKey" type="text" value={{.HTMLInput_DesKey}}>
+							<div></div>
+
+							<br>
+
+							<div>API使用說明 :
+								<select id="HTMLSelect_API" style="width: 50%;">
+									<option value="/MqttConnection">/MqttConnection  ➡ 獲取MQTT服務器IP清單</option>
+									<option value="/RegisterDevice">/RegisterDevice ➡ 登入設備UID</option>
+									<option value="/Task/CollectionTask">/Task/CollectionTask  ➡ 建立刷帳任務</option>
+									<option value="/Task/CollectionTaskWeb">/Task/CollectionTaskWeb ➡ 建立收款支付頁面</option>
+									<option value="/Task/AddTask">/Task/AddTask ➡ 建立出款單</option>
+									<option value="/Task/GetWalletBalance">/Task/GetWalletBalance ➡ 查詢錢包餘額任務:建立刷明細任務查詢錢包餘額</option>
+									<option value="/Task/InquireTask">/Task/InquireTask ➡ 查詢錢包餘額任務:建立刷明細任務查詢錢包餘額</option>
+									<option value="/Task/GetBankCard">/Task/GetBankCard ➡ 查詢出款/收款任務:查詢任務結果</option>
+								</select>
+								<input style="width: 25%; max-width: 30%;" type="button" value="載入接口說明"
+									onclick="JSF_LoadACSimple()">
+							</div>
+							<p></p>
+							<div></div>
+							接口測試伺服器URL : <input style="width: 48%;" id="HTMLInput_URL" name="HTMLInput_URL"
+								list="HTMLInput_URLValue" value="{{.HTMLInput_URL}}" /> <datalist
+								id="HTMLInput_URLValue">
+								<option value="https://api.ift-system.com">
+								<option value="https://api-stage.ift-system.com">
+								<option value="https://api-test.ift-system.com">
+								<option value="http://35.241.104.139:80">
+								<option value="http://34.92.55.224:80">
+								<option value="http://34.96.171.150:80">
+								<option value="http://localhost:8080">
+								<option value="http://api.ift-system.com">
+								<option value="http://api-stage.ift-system.com">
+								<option value="http://api-test.ift-system.com">
+								</option>
+							</datalist>
+							<div></div>
+							<p></p>
+							接口測試路徑URN : <input style="width: 48%;" id="HTMLInput_URN" name="HTMLInput_URN"
+								list="HTMLInput_URNValue" value="{{.HTMLInput_URN}}" />
+							<div></div>
+							<br>
+
+
+							<textarea style="width: 100%; " rows="6" id="HTMLInput_PostmanBody"
+								name="HTMLInput_PostmanBody">{{.HTMLInput_PostmanBody}}</textarea>
+							<div></div>
+							<br>
+							<input style="width: 100%; " type="submit" formaction="{{.HTMLValue_PostWebPath}}"
+								value="發送POST" />
+							<br>
+
+
+						</form>
+
+						<br>
+						<label>POST Request Script轉換:</label>
+						<div class="tab">
+							<button class="tablinks" onclick="JSF_TabSelect(event, 'Tab_HTTP')">HTTP</button>
+							<button class="tablinks" onclick="JSF_TabSelect(event, 'Tab_HTML5From')">HTML(From)</button>
+							<button class="tablinks" onclick="JSF_TabSelect(event, 'Tab_Curl')">Curl</button>
+						</div>
+
+						<div id="Tab_HTTP" class="tabcontent">
+							<textarea style="width: 100%;" rows="7">{{.HTMLValue_ReviewHTTP}}</textarea>
+						</div>
+
+						<div id="Tab_Curl" class="tabcontent">
+							<textarea style="width: 100%;" rows="7">{{.HTMLValue_ReviewCurl}}</textarea>
+						</div>
+
+						<div>POST Request Datea 內容(未加密) :</div>
+						<textarea style="width: 100%;" rows="4">{{.HTMLValue_ReviewPayload}}</textarea>
+
+						<br>
+						<br>
+						<label>測試結果(Response)</label> {{.HTMLValue_Return}}
+						<div></div>
+						<textarea style="width: 100%; " id="HTMLOutput_Response"
+							rows="10">{{.HTMLValue_Response}}</textarea>
+						<label>Data解密(Decrypt)</label>
+						<textarea style="width: 100%; " id="HTMLOutput_Decode_Response"
+							rows="20">{{.HTMLValue_Decode_Response}}</textarea>
+						<div></div>
+						* 回傳若為Json，系統將會自動格式化
+						<br>
+
+					</div>
+
+				</div>
+			</table>
+		</div>
+</body>
+<script language="javascript">
+
+	var textarea = document.getElementById("HTMLOutput_Response");
+	textarea.style.height = "auto";
+	textarea.style.height = textarea.scrollHeight + "px";
+
+	function JSF_SetCWinHeight() {
+		document.getElementById("iframeLeft").height = window.innerHeight - 10;
+		document.getElementById("divRight").height = window.innerHeight - 10;
+	}
+
+
+	checkFristLoad = document.getElementById("HTMLInput_PostmanBody").value;
+	if (checkFristLoad.length == 0) {
+		document.getElementById("HTMLInput_PostmanBody").value = "//仿照Postman Body格式(Bulk Edit),注意次序性";
+	}
+
+
+	checkFristLoad = document.getElementById("HTMLInput_LoginAccount").value;
+	if (checkFristLoad.length == 0) {
+		document.getElementById("HTMLInput_LoginAccount").value = "admintest";
+	}
+	checkFristLoad = document.getElementById("HTMLInput_SignKey").value;
+	if (checkFristLoad.length == 0) {
+		document.getElementById("HTMLInput_SignKey").value = "202CB962AC59075B964B07152D234B70";
+		//參考 newcp ./DesKeys
+	}
+	checkFristLoad = document.getElementById("HTMLInput_DesKey").value;
+	if (checkFristLoad.length == 0) {
+		document.getElementById("HTMLInput_DesKey").value = "TheLengthOfKeyOf3desIs24";
+		//參考 newcp ./DesKeys
+	}
+	checkFristLoad = document.getElementById("HTMLInput_URL").value;
+	if (checkFristLoad.length == 0) {
+		document.getElementById("HTMLInput_URL").placeholder = "https://api-test.ift-system.com";
+	}
+
+
+	function JSF_BeforeSendCheck() {
+		var checkFristLoad = document.getElementById("HTMLInput_URL").value;
+		if (checkFristLoad.length == 0) {
+			document.getElementById("HTMLInput_URL").value = "https://api-test.ift-system.com";
+		}
+
+	}
+
+	// function JSF_LoadExample() 
+	// {
+	// 	document.getElementById("HTMLInput_AESKey").value = "#EfY&R&kN11TJlID";
+	// 	document.getElementById("HTMLInput_Encode").value = '{"game_type":"1","is_better":"1","payment_methods":"0","sessionkey":"867415df8058e391c11a695149df1cc6","token":"ae0405e2d9641d2947562e56e1548e75","SignType":"0","Sign":"74f1dd316eda8cc64822cecdf5393978","Timestamp":"1596786543","ac":"betSport","client_type":"1","data":"[{"bet_odds":0,"history_id":"159678626126935915000000000000000","k":"0/0.5","p":"0.91","play_method":"HC","price":1,"schedule_id":2864589,"sport_id":2001,"team":"H","team_score":""}]","edition":"v1.0.0","uid":"23468"}';
+	// 	document.getElementById("HTMLInput_Decode").value = "AEX+4mltwL7S8MQSu73nwylQmFGDKfxIlNVYjqt39xRTinVjnVm1LbMz3b+slJBLmGRQz/2pVlBnsHGN/IwB1YQbatPNwciT6chA9Rmn1QENo2D/vLkmVCV7gWMcTaV0S7eWnlvFu5YdNkhC3/l6m1qULBYOZ0smLyZNSdyg37uDU6ClKFJmRnbYBHC/lOri1vx8jXVHjqt7rkTEFSnkFM2xZGUeimTeuccDp4YMRx54/885Ii+4eNK1t0cbLg7iAjdXOOlm2AuST1qlHvUI1cz77TXwBsUV1HKOCImSaIfub9/9dBH8eE8QVz7xkPVlsh2d5DsV88Lqg8lRQhRjUzdfY6+n6Tfa94ASJtupQCSCMCeMD0E9ectWQpqrNzpd4YWUXp+lJk8DlbFe+YketNYg+3Ic1EI/5pREnPW1WV7UefCoz2n12fFzy86bpFwQvf9a6Ewyf/yRbS/5kA/FUcaKbnwm7JXKH+Bra+OaHchRZIeR4iE4cBCWYYw/A5BBGGxqc7UWdrCEK4R2ePMgtI/OwfR/7Kb9UjSssOEToYc+oCe7OPVxgBzYmod7wEFxmSm7bWJyFoWg/9I7k/4t6HzTLe7kcx9MltBO2JszzM3yeRHrK8Xvq8kBqVV4O20tJAdQwpmrZeZpBi4VidauHqc6g==";
+	// 	return
+	// }
+
+	function JSF_TabSelect(evt, cityName) {
+		var i, tabcontent, tablinks;
+		tabcontent = document.getElementsByClassName("tabcontent");
+		for (i = 0; i < tabcontent.length; i++) {
+			tabcontent[i].style.display = "none";
+		}
+		tablinks = document.getElementsByClassName("tablinks");
+		for (i = 0; i < tablinks.length; i++) {
+			tablinks[i].className = tablinks[i].className.replace(" active", "");
+		}
+
+		document.getElementById(cityName).style.display = "block";
+		evt.currentTarget.className += " active";
+
+		return
+	}
+
+	function JSF_LoadACSimple() {
+		var APIName = document.getElementById("HTMLSelect_API").value;
+
+		if (APIName == "/MqttConnection") { document.getElementById("HTMLInput_URN").value = "/MqttConnection"; document.getElementById("HTMLInput_PostmanBody").value = '';  }
+		if (APIName == "/RegisterDevice") { document.getElementById("HTMLInput_URN").value = "/RegisterDevice"; document.getElementById("HTMLInput_PostmanBody").value = '//DeviceUID:登入設備UID[必填]➡例如: "123"\r\n\r\nDeviceUID:\n\n';  
+											JSF_BeforeSendCheck() 
+											var desKey = document.getElementById("HTMLInput_URL").value;
+											desKey = desKey.replace('http://', "");
+											desKey = desKey.replace('https://', "");
+											desKey = desKey.substr(0, 24); //取24字完
+											for(index=0;index<24;index++){
+												if (desKey.length < 24){
+													　desKey = desKey + '0'
+												} else{
+													break;
+												}
+											}
+											document.getElementById("HTMLInput_DesKey").value = desKey ;
+											console.log(document.getElementById("HTMLInput_DesKey").value);
+										}
+	
+		if (APIName == "/Task/CollectionTask") { document.getElementById("HTMLInput_URN").value = "/Task/CollectionTask"; document.getElementById("HTMLInput_PostmanBody").value = '//ResponseURL:回調URL[必填]➡例如: "www.ww.w"\r\n//TaskUID:商戶號[必填]➡例如: "123456790"\r\n//BankCardGroupId:使用出帳卡群組(必填可為空]➡例如: "1"\r\n//RemitterAccountName:轉帳戶名[必填可為空]➡例如: "1231234564894555"\r\n//Amount:收款金額[必填]➡例如: "100"\r\n//Attach:備註附言[必填可為空]➡例如: "註記"\r\n//IsAliPay: 卡種[必填]➡例如: "0"卡轉卡 "1"寶轉卡\r\n\r\n' + 'ResponseURL:\r\nTaskUID:\r\nBankCardGroupId:\r\nRemitterAccountName:\r\nAmount:\r\nAttach:\r\nIsAliPay:';  }
+		if (APIName == "/Task/CollectionTaskWeb") { document.getElementById("HTMLInput_URN").value = "/Task/CollectionTaskWeb"; document.getElementById("HTMLInput_PostmanBody").value = '//ResponseURL:回調URL[必填]➡例如: "www.ww.w"\r\n//TaskUID:商戶號[必填]➡例如: "123456790"\r\n//BankCardGroupId:使用出帳卡群組(必填可為空]➡例如: "1"\r\n//RemitterAccountName:轉帳戶名[必填可為空]➡例如: "1231234564894555"\r\n//Amount:收款金額[必填]➡例如: "100"\r\n//Attach:備註附言[必填可為空]➡例如: "註記"\r\n//IsAliPay: 卡種[必填]➡例如: "0"卡轉卡 "1"寶轉卡\r\n\r\n' + 'ResponseURL:\r\nTaskUID:\r\nBankCardGroupId:\r\nRemitterAccountName:\r\nAmount:\r\nAttach:\r\nIsAliPay:'; }
+		if (APIName == "/Task/AddTask") { document.getElementById("HTMLInput_URN").value = "/Task/AddTask"; document.getElementById("HTMLInput_PostmanBody").value = '//ResponseURL:回調URL[必填]➡例如: "www.ww.w"\r\n//TaskUID:商戶號[必填]➡例如: "123456790"\r\n//TaskType:使用出帳卡群組(必填可為空，任務類型 2:轉帳 4:查明細 6:補錢 8:手动结算)➡例如: "1"\r\n//BankCardGroupId:使用出帳卡群組(必填可為空]➡例如: "1"\r\n//TaskInfo:任務資訊[必填]➡例如: {"BankCode":"ICBC","AccountNo":"6212262104003100029","AccountName":"谢绘诗","Amount":"10"}\r\n//BankCode為銀行代碼，請參考api文件-銀行代碼列表；AccountNo為銀行帳號；AccountName為收款人姓名\r\n\r\n\r\n' + 'ResponseURL:\r\nTaskUID:\r\nTaskType:\r\nBankCardGroupId:\r\nTaskInfo:'; }
+		if (APIName == "/Task/GetWalletBalance") { document.getElementById("HTMLInput_URN").value = "/Task/GetWalletBalance"; document.getElementById("HTMLInput_PostmanBody").value = '//Account:商戶號[必填]➡例如: myaccount\r\n//Sign:簽名[必填]➡例如: "ABCDEF1234567890ABCDEF1234567890"\r\n\r\n' + 'Account:'; }
+		if (APIName == "/Task/InquireTask") { document.getElementById("HTMLInput_URN").value = "/Task/InquireTask"; document.getElementById("HTMLInput_PostmanBody").value = '//TaskUID:商戶號[必填可為空]➡例如: "123456790"\r\n//TaskNo:簽名[必填可為空]➡例如: "TYPE_ACCOUNT_1234567890123"\r\n\r\n' + 'TaskUID:\r\nTaskNo:'; }
+		if (APIName == "/Task/GetBankCard") { document.getElementById("HTMLInput_URN").value = "/Task/GetBankCard"; document.getElementById("HTMLInput_PostmanBody").value = '//PayeeAccountNo:卡號[必填可為空]➡例如: "123456789"\r\n//GroupId:商戶號[必填可為空]➡例如: "1"\r\n//Amt:簽名[必填]➡例如: "10"\r\n\r\n' + 'PayeeAccountNo:\r\nGroupId:\r\nAmt:'; }
+
+		var textarea = document.getElementById("HTMLInput_PostmanBody");
+		textarea.style.height = "auto";
+		textarea.style.height = textarea.scrollHeight + "px";
+
+		return
+	}
+
+</script>
+
+</html>
