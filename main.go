@@ -125,23 +125,31 @@ func main() {
 	//永久等待收到系統發出訊號類型,若符合則往下執行
 	close(quitChan)
 
-	shutdownCTX, shutdownClose := context.WithTimeout(context.Background(), 8*time.Second)
-	defer shutdownClose() //透過context.WithTimeout產生一個新的子context，它的特性是有生命週期，只要超過8秒就會自動發出Done()的訊息
-	if err := apiServ.Shutdown(shutdownCTX); err != nil {
+	timeoutSec := 4
+	timeoutCTX, timeoutClose := context.WithTimeout(context.Background(), time.Duration(timeoutSec)*time.Second)
+	defer timeoutClose() //透過context.WithTimeout產生一個新的子context，它的特性是有生命週期，只要超過8秒就會自動發出Done()的訊息
+	if err := apiServ.Shutdown(timeoutCTX); err != nil {
 		log.Fatal("API關閉服務過程中發生錯誤:", err)
 	}
 
+	go func() {
+		<-timeoutCTX.Done() //timeout觸發
+		timeoutClose()
+		log.Printf("超時%v秒, API服務強制關閉！\n", timeoutSec)
+		os.Exit(3)
+	}()
+	log.Printf("\n正在關閉API服務... \n")
+
+	//========================往下可帶入timeoutCTX執行自定義需要觸發關機程序的func============================={
+
+	//func(timeoutCTX)
 	loggerToDB.AddMessage(&loggerToDB.Message{
 		ServerName:      global.ServiceName,
 		APIErrorMessage: "收到關閉訊號...",
 	}) //若api意外結束則回傳此訊息
-	println()
-	log.Printf("正在關閉API服務... \n")
-	//loggerClose()                                                                  //催速logger快點寫入
-	//alert.SendMessageWithTime(fmt.Sprintf("服務已遭受關閉 > %v", common.GetUnixNowSec())) //TG發出告警
 
-	<-shutdownCTX.Done() //當子context發出Done()的訊號才繼續向下走
-	log.Printf("API服務已關閉！遺失[%v]筆紀錄.\n", len(loggerToDB.QueueChan))
 	//====================================================================================}
 
+	log.Printf("API服務已關閉！遺失[%v]筆紀錄.\n", len(loggerToDB.QueueChan))
+	return
 }
